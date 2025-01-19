@@ -8,6 +8,24 @@ if not os.path.exists(IMAGE_DIR):
     os.makedirs(IMAGE_DIR)
 
 def main():
+    # Basic Authentication
+    # password = os.getenv("APP_PASSWORD")
+    # if password is None:
+    #     st.error("Password environment variable is not set. Please set it before running the app.")
+    #     return
+    # password = "changeme1"
+    # user_password = st.text_input("Enter Password", type="password")
+    # if st.button("Login"):
+    #     if user_password == password:
+    #         st.session_state.authenticated = True
+    #     else:
+    #         st.error("Incorrect password. Please try again.")
+    
+    # if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
+    #     return
+    
+
+
     st.title("Image Uploader & Viewer")
     
     # File Upload Section
