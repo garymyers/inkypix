@@ -7,6 +7,11 @@ IMAGE_DIR = "./images"
 if not os.path.exists(IMAGE_DIR):
     os.makedirs(IMAGE_DIR)
 
+# Define the directory where images will be stored
+CONFIG_DIR = "./config"
+if not os.path.exists(CONFIG_DIR):
+    os.makedirs(CONFIG_DIR)
+
 def main():
     # Basic Authentication
     # password = os.getenv("APP_PASSWORD")
@@ -23,7 +28,26 @@ def main():
     
     # if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
     #     return
-    
+    # File to store the refresh interval
+    REFRESH_INTERVAL_FILE = f"{CONFIG_DIR}/refresh_interval.txt"
+
+    def read_refresh_interval():
+        if os.path.exists(REFRESH_INTERVAL_FILE):
+            with open(REFRESH_INTERVAL_FILE, "r") as f:
+                return int(f.read().strip())
+        else:
+            return 2  # Default to 2 minutes
+
+    def write_refresh_interval(interval):
+        with open(REFRESH_INTERVAL_FILE, "w") as f:
+            f.write(str(interval))
+
+    # Refresh Interval Section
+    refresh_interval = read_refresh_interval()
+    new_refresh_interval = st.number_input("Set Refresh Interval (minutes)", min_value=1, value=refresh_interval)
+    if st.button("Save"):
+        write_refresh_interval(new_refresh_interval)
+        st.success(f"Refresh interval set to {new_refresh_interval} minutes.")
 
 
     st.title("Image Uploader & Viewer")

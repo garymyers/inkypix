@@ -8,6 +8,12 @@ from PIL import Image
 from inky.auto import auto
 import time
 
+# Define the directory where images will be stored
+CONFIG_DIR = "./config"
+if not os.path.exists(CONFIG_DIR):
+    os.makedirs(CONFIG_DIR)
+REFRESH_INTERVAL_FILE = f"{CONFIG_DIR}/refresh_interval.txt"
+
 class InkyPix:
 
     def __init__(self):
@@ -16,9 +22,19 @@ class InkyPix:
         self.picture_directory = None
         self.orientation = 0  # portrait
         self.saturation = 0.5
-        self.interval = 2
+        self.interval = None
         self.images = []
         self.last = None
+
+    def get_refresh_interval(self):
+        if self.interval: 
+            return self.interval
+        if os.path.exists(REFRESH_INTERVAL_FILE):
+            with open(REFRESH_INTERVAL_FILE, "r") as f:
+                print("openeing file")
+                return int(f.read().strip())
+        else:
+            return 2 # Default to 2 minutes
 
     def transform_image(self, image_path):
         # Open the image
@@ -69,8 +85,9 @@ class InkyPix:
             while selected_image == self.last:
                 selected_image = random.choice(self.images)
         image = self.show_image(selected_image)
-        print(f"Sleeping for {self.interval} seconds")
-        time.sleep(self.interval)
+        ri = self.get_refresh_interval()
+        print(f"Sleeping for {ri} seconds")
+        time.sleep(ri)
         self.slide_show() # reload
 
         # Schedule the next image update after a delay (e.g., 1 second)
@@ -97,7 +114,7 @@ if __name__ == "__main__":
     parser.add_argument("--saturation", "-s", type=float, default=0.5, help="Colour palette saturation")
     parser.add_argument("--orientation", "-o", type=int, default=0, help="0 for portrait; 1 for landscape")
     parser.add_argument("--folder", "-f", type=str, default="./images", help="Image folder")
-    parser.add_argument("--interval", "-i",  type=int, default=2, help="number of minutes for each interval")
+    parser.add_argument("--interval", "-i",  type=int, help="number of minutes for each interval")
 
     args = parser.parse_args()
 
@@ -106,9 +123,12 @@ if __name__ == "__main__":
         {sys.argv[0]} --folder ./images (--saturation 0.5)""")
         sys.exit(1)
 
+    interval = None
+
     i = InkyPix()
     i.saturation = args.saturation
     i.picture_directory = str(args.folder).strip()
     i.orientation = args.orientation
-    i.interval = args.interval * 60
+    if args.interval:
+        i.interval = args.interval
     i.slide_show()
