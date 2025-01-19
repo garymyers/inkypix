@@ -71,7 +71,7 @@ class InkyPix:
         image = self.show_image(selected_image)
         print(f"Sleeping for {self.interval} seconds")
         time.sleep(self.interval)
-        self.show_next_image()
+        self.slide_show() # reload
 
         # Schedule the next image update after a delay (e.g., 1 second)
         # self.sleep
