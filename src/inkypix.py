@@ -87,7 +87,7 @@ class InkyPix:
         self.last = fq_name
         img = self.transform_image(fq_name)
         self.inky.set_image(img, saturation=self.saturation)
-        self.inky.set_border(inky.BLACK)
+        self.inky.set_border(self.inky.BLACK)
         self.inky.show()
 
     def show_next_image(self):
