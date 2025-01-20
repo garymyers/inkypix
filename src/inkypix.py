@@ -120,8 +120,8 @@ class InkyPix:
 
     # "handle_button" will be called every time a button is pressed
     # It receives one argument: the associated input pin.
-    def handle_button(self, pin):
-        label = LABELS[BUTTONS.index(pin.pin.number)]
+    def handle_button(self, button):
+        label = LABELS[BUTTONS.index(button.pin.number)]
         print(f"PRESSED {pin.number} / {label}")
         if label == 'A':
             self.show_next_image()
@@ -131,7 +131,7 @@ class InkyPix:
     def add_buttons(self):
         print('Adding button hooks')
         for pin in BUTTONS:
-            button = Button(pin=pin, pull_up=True, bounce_time=0.250)
+            button = Button(pin=pin, pull_up=True, bounce_time=5000)
             button.when_pressed = self.handle_button
 
 
