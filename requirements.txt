@@ -1,3 +1,4 @@
 inky
 pillow
 streamlit
+RPi.GPIO
