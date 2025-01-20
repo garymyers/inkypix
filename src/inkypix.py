@@ -18,15 +18,11 @@ REFRESH_INTERVAL_FILE = f"{CONFIG_DIR}/refresh_interval.txt"
 # extensions to load
 EXTENSIONS = ('*.png', '*.jpg')
 
-# # Gpio pins for each button (from top to bottom)
-# BUTTONS = [5, 6, 16, 24]
+# Gpio pins for each button (from top to bottom)
+BUTTONS = [5, 6, 16, 24]
 
-# # Set up RPi.GPIO with the "BCM" numbering scheme
-# GPIO.setmode(GPIO.BCM)
-
-# # Buttons connect to ground when pressed, so we should set them up
-# # with a "PULL UP", which weakly pulls the input signal to 3.3V.
-# GPIO.setup(BUTTONS, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# These correspond to buttons A, B, C and D respectively
+LABELS = ['A', 'B', 'C', 'D']
 
 class InkyPix:
 
@@ -40,6 +36,7 @@ class InkyPix:
         self.interval = None
         self.images = []
         self.last = None
+        self.add_buttons()
 
     def get_refresh_interval(self):
         if self.interval: 
@@ -121,18 +118,21 @@ class InkyPix:
 
         self.show_next_image()
 
-    # def add_buttons(self):
-    #     print('Adding button hooks')
-    #     for pin in BUTTONS:
-    #         GPIO.add_event_detect(pin, GPIO.FALLING, self.handle_button, bouncetime=5000)
+    # "handle_button" will be called every time a button is pressed
+    # It receives one argument: the associated input pin.
+    def handle_button(self, pin):
+        label = LABELS[BUTTONS.index(pin.pin.number)]
+        if label == 'A':
+            self.show_next_image()
+        elif label == 'D':
+            subprocess.run("sudo shutdown --poweroff now", shell=True)
+    
+    def add_buttons(self):
+        print('Adding button hooks')
+        for pin in BUTTONS:
+            button = Button(pin=pin, pull_up=True, bounce_time=0.250)
+            button.when_pressed = handle_button
 
-    # def handle_button(self, pin):
-    #     last_button = BUTTONS.index(pin)
-    #     if last_button == 0:
-    #         self.show_next_image()
-    #     elif last_button == 3:
-    #         subprocess.run("sudo shutdown --poweroff now", shell=True)
-        
 
 
 if __name__ == "__main__":
