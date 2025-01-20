@@ -7,6 +7,7 @@ import random
 from PIL import Image
 from inky.auto import auto
 import time
+from subprocess import check_call
 from gpiozero import Button
 
 # Define the directory where images will be stored
