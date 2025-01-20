@@ -127,7 +127,8 @@ class InkyPix:
         if label == 'A':
             self.show_next_image()
         elif label == 'D':
-            subprocess.run("sudo shutdown --poweroff now", shell=True)
+            check_call(['sudo', 'poweroff'])
+            #subprocess.run("sudo shutdown --poweroff now", shell=True)
     
     def add_buttons(self):
         print('Adding button hooks')
