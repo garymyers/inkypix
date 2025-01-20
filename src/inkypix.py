@@ -122,6 +122,7 @@ class InkyPix:
     # It receives one argument: the associated input pin.
     def handle_button(self, pin):
         label = LABELS[BUTTONS.index(pin.pin.number)]
+        print(f"PRESSED {pin.number} / {label}")
         if label == 'A':
             self.show_next_image()
         elif label == 'D':
