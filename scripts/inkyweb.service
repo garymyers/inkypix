@@ -3,6 +3,7 @@ Description=Inkypix slideshow
 After=multi-user.target
 
 [Service]
+WorkingDirectory=/home/gary/Projects/inkypix
 ExecStart=/usr/bin/bash /home/gary/Projects/inkypix/inkyweb.sh
 Type=simple
 
