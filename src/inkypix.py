@@ -131,8 +131,8 @@ class InkyPix:
     def add_buttons(self):
         print('Adding button hooks')
         for pin in BUTTONS:
-            button = Button(pin=pin, pull_up=True, bounce_time=5000)
-            button.when_pressed = self.handle_button
+            button = Button(pin=pin, hold_time=2)
+            button.when_held = self.handle_button
 
 
 
