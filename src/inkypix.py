@@ -7,7 +7,7 @@ import random
 from PIL import Image
 from inky.auto import auto
 import time
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 
 # Define the directory where images will be stored
 CONFIG_DIR = "./config"
@@ -18,21 +18,21 @@ REFRESH_INTERVAL_FILE = f"{CONFIG_DIR}/refresh_interval.txt"
 # extensions to load
 EXTENSIONS = ('*.png', '*.jpg')
 
-# Gpio pins for each button (from top to bottom)
-BUTTONS = [5, 6, 16, 24]
+# # Gpio pins for each button (from top to bottom)
+# BUTTONS = [5, 6, 16, 24]
 
-# Set up RPi.GPIO with the "BCM" numbering scheme
-GPIO.setmode(GPIO.BCM)
+# # Set up RPi.GPIO with the "BCM" numbering scheme
+# GPIO.setmode(GPIO.BCM)
 
-# Buttons connect to ground when pressed, so we should set them up
-# with a "PULL UP", which weakly pulls the input signal to 3.3V.
-GPIO.setup(BUTTONS, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# # Buttons connect to ground when pressed, so we should set them up
+# # with a "PULL UP", which weakly pulls the input signal to 3.3V.
+# GPIO.setup(BUTTONS, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 class InkyPix:
 
     def __init__(self):
         self.inky = auto()
-        self.add_buttons()
+        # self.add_buttons()
         self.resolution = self.inky.resolution
         self.picture_directory = None
         self.orientation = 0  # portrait
@@ -121,17 +121,17 @@ class InkyPix:
 
         self.show_next_image()
 
-    def add_buttons(self):
-        print('Adding button hooks')
-        for pin in BUTTONS:
-            GPIO.add_event_detect(pin, GPIO.FALLING, self.handle_button, bouncetime=5000)
+    # def add_buttons(self):
+    #     print('Adding button hooks')
+    #     for pin in BUTTONS:
+    #         GPIO.add_event_detect(pin, GPIO.FALLING, self.handle_button, bouncetime=5000)
 
-    def handle_button(self, pin):
-        last_button = BUTTONS.index(pin)
-        if last_button == 0:
-            self.show_next_image()
-        elif last_button == 3:
-            subprocess.run("sudo shutdown --poweroff now", shell=True)
+    # def handle_button(self, pin):
+    #     last_button = BUTTONS.index(pin)
+    #     if last_button == 0:
+    #         self.show_next_image()
+    #     elif last_button == 3:
+    #         subprocess.run("sudo shutdown --poweroff now", shell=True)
         
 
 
