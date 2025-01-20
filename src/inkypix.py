@@ -7,6 +7,7 @@ import random
 from PIL import Image
 from inky.auto import auto
 import time
+import RPi.GPIO as GPIO
 
 # Define the directory where images will be stored
 CONFIG_DIR = "./config"
