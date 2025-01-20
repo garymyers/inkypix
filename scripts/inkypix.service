@@ -1,0 +1,10 @@
+[Unit]
+Description=Inkypix slideshow
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/bash /home/gary/Projects/inkypix/inkypix.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
