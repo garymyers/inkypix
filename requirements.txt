@@ -1,4 +1,5 @@
 inky
 pillow
 streamlit
+lgpio
 gpiozero
