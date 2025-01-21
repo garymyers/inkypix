@@ -9,6 +9,7 @@ from inky.auto import auto
 import time
 from subprocess import check_call
 from gpiozero import Button
+from collections import Counter
 
 # Define the directory where images will be stored
 CONFIG_DIR = "./config"
@@ -36,8 +37,9 @@ class InkyPix:
         self.saturation = 0.5
         self.interval = None
         self.images = []
-        self.last = None
         self.add_buttons()
+        self.random_images = []
+        self.index = 0
 
     def get_refresh_interval(self):
         if self.interval: 
@@ -82,7 +84,6 @@ class InkyPix:
 
     def show_image(self, fq_name):
         print(f"showing {fq_name}")
-        self.last = fq_name
         img = self.transform_image(fq_name)
         self.inky.set_image(img, saturation=self.saturation)
         self.inky.set_border(self.inky.BLACK)
@@ -94,12 +95,12 @@ class InkyPix:
             return
                 
         # Select a random image from the list
-        selected_image = random.choice(self.images)
-        if len(self.images) > 1:
-            while selected_image == self.last:
-                selected_image = random.choice(self.images)
+        selected_image = self.random_images[self.index]
         image = self.show_image(selected_image)
         ri = self.get_refresh_interval() * 60
+        self.index += 1
+        if self.index >= len(self.random_images):
+            self.index = 0
         print(f"Sleeping for {ri} seconds")
         time.sleep(ri)
         self.slide_show() # reload
@@ -108,15 +109,28 @@ class InkyPix:
         # self.sleep
         # self.root.after(self.interval, self.show_next_image)
 
+    def randomize_images(self):
+        self.random_images = []
+        self.random_images.extend(self.images)
+        random.shuffle(self.random_images)
+
+
+    def image_list_changes(self, imgs):
+        return Counter(self.images) != Counter(imgs)
+
+
     def slide_show(self):
-        self.images = []
-        
+        temp = []
         # Load images from the directory
         for filename in os.listdir(self.picture_directory):
             if filename.lower().endswith(('.jpg', '.png')):
                 file_path = os.path.join(self.picture_directory, filename)
-                self.images.append(file_path)
+                temp.append(file_path)
 
+        if len(self.images) == 0 or self.image_list_changes(temp):
+            self.images = temp
+            self.randomize_images()
+        
         self.show_next_image()
 
     # "handle_button" will be called every time a button is pressed
